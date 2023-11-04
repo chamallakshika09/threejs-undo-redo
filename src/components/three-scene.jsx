@@ -3,11 +3,14 @@ import React, { useRef, useEffect, useState } from 'react';
 
 import { createCamera, createCube, createRenderer, createScene } from 'threejs/three-setup';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectColor, selectPosition, selectRotation, selectScale } from 'store/cube-slice';
 import { ControlPanel } from './control-panel';
+import { redo, undo } from 'store/history-slice';
 
 const ThreeScene = () => {
+  const dispatch = useDispatch();
+
   const mountRef = useRef(null);
   const cubeRef = useRef(null);
   const frameIdRef = useRef(null);
@@ -78,6 +81,25 @@ const ThreeScene = () => {
       cubeRef.current.material.color.set(color);
     }
   }, [rotation, scale, position, color]);
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      const isCtrlPressed = event.ctrlKey || event.metaKey;
+
+      if (isCtrlPressed && (event.key === 'z' || event.key === 'Z')) {
+        dispatch(undo());
+      }
+      if ((isCtrlPressed && event.key === 'y') || event.key === 'Y') {
+        dispatch(redo());
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [dispatch]);
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>

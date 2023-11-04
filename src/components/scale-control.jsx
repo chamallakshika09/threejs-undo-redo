@@ -3,12 +3,23 @@ import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { setScale } from 'store/cube-slice';
+import { addHistory } from 'store/history-slice';
 
 const ScaleControl = () => {
   const scale = useSelector((state) => state.cube.scale);
   const dispatch = useDispatch();
 
   const handleScaleChange = (axis) => (event, value) => {
+    dispatch(
+      addHistory({
+        type: setScale.type,
+        payload: {
+          oldValue: scale,
+          newValue: { ...scale, [axis]: value },
+        },
+      })
+    );
+
     dispatch(setScale({ ...scale, [axis]: value }));
   };
 

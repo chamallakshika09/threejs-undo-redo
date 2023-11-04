@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const cubeSlice = createSlice({
   name: 'cube',
   initialState: {
-    color: 0x00ff00,
+    color: '#00ff00',
     scale: { x: 1, y: 1, z: 1 },
     rotation: {
       x: 0 * (180 / Math.PI),

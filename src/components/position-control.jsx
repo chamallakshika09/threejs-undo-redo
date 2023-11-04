@@ -3,12 +3,22 @@ import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { setPosition } from 'store/cube-slice';
+import { addHistory } from 'store/history-slice';
 
 const PositionControl = () => {
   const position = useSelector((state) => state.cube.position);
   const dispatch = useDispatch();
 
   const handlePositionChange = (axis) => (event, value) => {
+    dispatch(
+      addHistory({
+        type: setPosition.type,
+        payload: {
+          oldValue: position,
+          newValue: { ...position, [axis]: value },
+        },
+      })
+    );
     dispatch(setPosition({ ...position, [axis]: value }));
   };
 

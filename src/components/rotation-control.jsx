@@ -3,12 +3,22 @@ import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { setRotation } from 'store/cube-slice';
+import { addHistory } from 'store/history-slice';
 
 const RotationControl = () => {
   const rotation = useSelector((state) => state.cube.rotation);
   const dispatch = useDispatch();
 
   const handleRotationChange = (axis) => (event, value) => {
+    dispatch(
+      addHistory({
+        type: setRotation.type,
+        payload: {
+          oldValue: rotation,
+          newValue: { ...rotation, [axis]: value },
+        },
+      })
+    );
     dispatch(setRotation({ ...rotation, [axis]: value }));
   };
 
